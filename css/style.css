@@ -1,0 +1,68 @@
+hr
+{
+    clear:both;
+}
+
+.description {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-family: 'open sans', sans-serif;
+    font-weight: 400;
+}
+
+#demo 
+{
+    clear:both;
+    float:left;
+    margin: 10px auto 20px auto;
+}
+
+#demo_btns 
+{
+    clear: both;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+#demo_btns li
+{
+    float: left;
+    padding: 0;
+    margin: 5px 10px 5px 0;
+    list-style: none;
+}
+
+#loader 
+{
+    float:left;
+    clear:both;
+}
+
+#photolist
+{
+    clear:both;
+    width:100%;
+}
+
+#photolist .contact {
+	display: inline-block;
+	width: 140px;
+	text-align: center;
+	vertical-align: middle;
+	margin: 5px;
+	cursor: pointer;
+}
+
+#photolist .contact img 
+{
+    padding: 4px;
+	border-style: solid;
+	border-color: #D9D9D9;
+	border-width: 1px;
+}
+
+#photolist .contact p
+{
+    font-size:9pt;
+}
