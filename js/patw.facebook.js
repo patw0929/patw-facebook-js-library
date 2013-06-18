@@ -1,8 +1,8 @@
 /*
- * patw's jQuery Facebook JS SDK Library 1.0
+ * patw's jQuery Facebook JS SDK Library 1.1
  * https://code.google.com/p/patw-facebook-js-library/
  *
- * Copyright (C) 2012 Patrick Wang <patw.hi@gmail.com>
+ * Copyright (C) 2013 Patrick Wang <patw.hi@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -38,6 +38,7 @@ var PatwFB = window.PatwFB || {};
         cookie: true,
         oauth: true,
         channelUrl: "",
+        redirect_uri: "",
         scope: "",
         perm_cache: [],
         // =====================================================================
@@ -169,29 +170,51 @@ var PatwFB = window.PatwFB || {};
         // =====================================================================
         // Facebook Connect Login
         // =====================================================================
-        Login: function (Success_callback, fail_callback) {
-            FB.login(function (response) {
-                PatwFB.CheckPerm(PatwFB.scope);
+        Login: function(Success_callback, Fail_callback) {
+            PatwFB.CheckPerm(PatwFB.scope);
 
-                if (response.authResponse) {
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
 
                     PatwFB.userInfo();
                     PatwFB.uid = response.authResponse.userID;
                     PatwFB.accessToken = response.authResponse.accessToken;
 
-                    if (typeof (Success_callback) != 'undefined') {
-                        FB.api('/me', function (response) {
+                    if (typeof(Success_callback) != 'undefined') {
+                        FB.api('/me', function(response) {
                             Success_callback(response);
                         });
                     }
+
+                } else if (response.status === 'not_authorized') {
+
+                    FB.login(function(response) {
+                        if (response.authResponse) {
+
+                            PatwFB.userInfo();
+                            PatwFB.uid = response.authResponse.userID;
+                            PatwFB.accessToken = response.authResponse.accessToken;
+
+                            if (typeof(Success_callback) != 'undefined') {
+                                FB.api('/me', function(response) {
+                                    Success_callback(response);
+                                });
+                            }
+                        } else {
+
+                            if (typeof(Fail_callback) != 'undefined') {
+                                Fail_callback(response);
+                            } else {
+                                PatwFB.log("login failed");
+                                PatwFB.log(response);
+                            }
+                        }
+                    });
+
                 } else {
 
-                    if (typeof (fail_callback) != 'undefined') {
-                        fail_callback(response);
-                    } else {
-                        PatwFB.log("login failed");
-                        PatwFB.log(response);
-                    }
+                    window.open('https://www.facebook.com/dialog/oauth?client_id=' + PatwFB.appId + '&redirect_uri=' + PatwFB.redirect_uri + '&scope=' + PatwFB.scope, '_top');
+
                 }
             }, {
                 scope: PatwFB.scope
