@@ -179,6 +179,14 @@ var PatwFB = window.PatwFB || {};
         Login: function (success_callback, fail_callback) {
             PatwFB.CheckPerm(PatwFB.scope);
 
+            if (typeof success_callback !== 'function') {
+                success_callback = false;
+            }
+
+            if (typeof fail_callback !== 'function') {
+                fail_callback = false;
+            }
+
             FB.getLoginStatus(function (response) {
                 if (response.status === 'connected') {
 
@@ -186,7 +194,7 @@ var PatwFB = window.PatwFB || {};
                     PatwFB.uid = response.authResponse.userID;
                     PatwFB.accessToken = response.authResponse.accessToken;
 
-                    if (success_callback !== undefined) {
+                    if (success_callback) {
                         FB.api('/me', function (response) {
                             success_callback(response);
                         });
@@ -201,14 +209,14 @@ var PatwFB = window.PatwFB || {};
                             PatwFB.uid = response.authResponse.userID;
                             PatwFB.accessToken = response.authResponse.accessToken;
 
-                            if (success_callback !== undefined) {
+                            if (success_callback) {
                                 FB.api('/me', function (response) {
                                     success_callback(response);
                                 });
                             }
                         } else {
 
-                            if (fail_callback !== undefined) {
+                            if (fail_callback) {
                                 fail_callback(response);
                             } else {
                                 PatwFB.log("login failed");
@@ -224,13 +232,13 @@ var PatwFB = window.PatwFB || {};
                 }
             });
 
-            FB.login(function(){ }, {scope: PatwFB.scope});
+            FB.login(undefined, {scope: PatwFB.scope});
         },
         Logout: function (callback) {
             FB.logout(function (response) {
                 PatwFB.log("user is now logged out");
 
-                if (callback) {
+                if (typeof callback === 'function') {
                     callback(response);
                 }
             });
@@ -246,11 +254,11 @@ var PatwFB = window.PatwFB || {};
         API: function (path, method, params, successEvent, failedEvent) {
             FB.api(path, method, params, function (response) {
                 if (!response || response.error) {
-                    if (failedEvent !== undefined) {
+                    if (typeof failedEvent === 'function') {
                         failedEvent(response);
                     }
                 } else {
-                    if (successEvent !== undefined) {
+                    if (typeof successEvent === 'function') {
                         successEvent(response);
                     }
                 }
@@ -263,11 +271,11 @@ var PatwFB = window.PatwFB || {};
         UI: function (params, successEvent, failedEvent) {
             FB.ui(params, function (response) {
                 if (!response || response.error) {
-                    if (failedEvent !== undefined) {
+                    if (typeof failedEvent === 'function') {
                         failedEvent(response);
                     }
                 } else {
-                    if (successEvent !== undefined) {
+                    if (typeof successEvent === 'function') {
                         successEvent(response);
                     }
                 }
@@ -281,7 +289,7 @@ var PatwFB = window.PatwFB || {};
                 method: 'fql.query',
                 query: query
             }, function (response) {
-                if (successEvent !== undefined) {
+                if (typeof successEvent === 'function') {
                     successEvent(response);
                 }
             });
@@ -298,7 +306,7 @@ var PatwFB = window.PatwFB || {};
                 var count = 0;
                 count = data.shares;
 
-                if (callback !== undefined) {
+                if (typeof callback === 'function') {
                     callback(count);
                 }
             });
@@ -307,8 +315,8 @@ var PatwFB = window.PatwFB || {};
         // Check the user is some page's fans or not
         // 
         // PageID: Fanpage's ID
-        // TrueEvent: If the user is a fan, the callback event.
-        // FalseEvent: If not, the callback event.
+        // trueEvent: If the user is a fan, the callback event.
+        // falseEvent: If not, the callback event.
         // =====================================================================
         isFan: function (PageID, trueEvent, falseEvent) {
 
@@ -320,18 +328,18 @@ var PatwFB = window.PatwFB || {};
                     FB.api('/me/likes/' + PageID, function (response) {
                         if (response.data) {
                             if (!PatwFB.isEmpty(response.data)) {
-                                if (trueEvent !== undefined) {
+                                if (typeof trueEvent === 'function') {
                                     trueEvent(response.data);
                                 }
                             } else {
                                 PatwFB.log(response);
-                                if (falseEvent !== undefined) {
+                                if (typeof falseEvent === 'function') {
                                     falseEvent();
                                 }
                             }
                         } else {
                             PatwFB.log(response);
-                            if (falseEvent !== undefined) {
+                            if (typeof falseEvent === 'function') {
                                 falseEvent();
                             }
                         }
@@ -355,7 +363,7 @@ var PatwFB = window.PatwFB || {};
                         PatwFB.log(response);
                         PatwFB.me = response;
 
-                        if (callback !== undefined) {
+                        if (typeof callback === 'function') {
                             callback(response);
                         }
                     });
@@ -493,6 +501,14 @@ var PatwFB = window.PatwFB || {};
         // =====================================================================
         UploadPhoto: function (albums_params, photos_params, tags_params, successEvent, failedEvent) {
 
+            if (typeof successEvent !== 'function') {
+                successEvent = false;
+            }
+
+            if (typeof failedEvent !== 'function') {
+                failedEvent = false;
+            }
+
             FB.getLoginStatus(function (response) {
 
                 if (response.authResponse) {
@@ -524,6 +540,8 @@ var PatwFB = window.PatwFB || {};
                                 PatwFB.API('/me/albums', 'POST', albums_params,
 
                                     function Success(response) {
+                                        PatwFB.log('Make a new album success!');
+
                                         // upload
                                         PatwFB.API('/' + response.id + '/photos', 'POST', photos_params,
 
@@ -533,50 +551,55 @@ var PatwFB = window.PatwFB || {};
                                                 if (tags_params.length !== 0) {
 
                                                     PatwFB.API('/' + response.id + '/tags', 'POST', tags_params,
-                                             
+
                                                         function (response) {
-                                                            if (successEvent !== undefined) {
+                                                            PatwFB.log('Publish photo with tags success!');
+                                                            if (successEvent) {
                                                                 successEvent(response);
                                                             }
                                                         },
                                                         function (response) {
-                                                            if (failedEvent !== undefined) {
+                                                            PatwFB.log('Publish photo with tags failed!');
+                                                            if (failedEvent) {
                                                                 failedEvent(response);
                                                             }
                                                         }
                                                         );
-                                                } else {
-
-                                                    if (successEvent !== undefined) {
+                                                } else { // no tag
+                                                    PatwFB.log('Publish photo success!');
+                                                    if (successEvent) {
                                                         successEvent(response);
                                                     }
 
                                                 }
                                             },
-
-                                            function (response) {
-                                                if (failedEvent !== undefined) {
+                                            function Failed(response) {
+                                                PatwFB.log('Publish photo failed!');
+                                                if (failedEvent) {
                                                     failedEvent(response);
                                                 }
                                             });
                                     },
 
-                                       function (response) {
-                                        if (failedEvent !== undefined) {
+                                       function Failed(response) {
+                                        PatwFB.log('Make a new album failed!');
+                                        if (failedEvent) {
                                             failedEvent(response);
                                         }
                                     });
-                            } else {
+                            } else { // find the album
                                 // upload
                                 PatwFB.API('/' + AlbumsID + '/photos', 'POST', photos_params,
 
                                     function (response) {
-                                        if (successEvent !== undefined) {
+                                        PatwFB.log('Publish the photo to the specific album success!');
+                                        if (successEvent) {
                                             successEvent(response);
                                         }
                                     },
                                     function (response) {
-                                        if (failedEvent !== undefined) {
+                                        PatwFB.log('Publish the photo to the specific album failed!');
+                                        if (failedEvent) {
                                             failedEvent(response);
                                         }
                                     });
@@ -586,19 +609,19 @@ var PatwFB = window.PatwFB || {};
                         alert("please fill the params");
                     }
 
-                } else {
+                } else { // not login
                     PatwFB.Login(
 
                         function LoginSuccess() {
                             PatwFB.UploadPhoto(albums_params, photos_params,
 
                                 function (response) {
-                                    if (successEvent !== undefined) {
+                                    if (successEvent) {
                                         successEvent(response);
                                     }
                                 },
                                 function (response) {
-                                    if (failedEvent !== undefined) {
+                                    if (failedEvent) {
                                         failedEvent(response);
                                     }
                                 });

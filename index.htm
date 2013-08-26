@@ -1,15 +1,14 @@
-﻿<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta charset="utf-8" />
 <title>patw's jQuery Facebook JS SDK Library</title>
 <link href="css/bootstrap.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/patw.facebook.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(function() {
     	// AppID
         PatwFB.appId = '360261570721073';
         // Init
@@ -27,10 +26,13 @@
 		    },
 		    function() {
 			    $("#div_fan").show();
-			    setTimeout("CheckIsFan(" + pageid + ")", 1000);
+			    setTimeout(function () {
+                    CheckIsFan(pageid);
+                }, 1000);
 		    }
 	    );
-    }
+
+    }
 
     // Publish (directly)
     function Publish() {
@@ -78,8 +80,7 @@
 
     function PostPhotoUI()
     {
-        var data=
-        {
+        var data = {
            method: 'feed',
            message: 'Hello world',
            name: 'Title',
@@ -95,7 +96,7 @@
                 { name: 'Google', link: 'http://www.google.com/' }
            ],
            user_message_prompt: 'Yes.. This is a test.'
-        }
+        };
 	
 	    PatwFB.PublishUI(data, 
 	    function(response){
@@ -127,7 +128,7 @@
                 { name: 'Google', link: 'http://www.google.com/' }
            ],
             user_message_prompt: 'Yes.. This is a test.'
-        }
+        };
 
         PatwFB.PublishUI(data,
 	    function (response) {
@@ -226,7 +227,7 @@
     function RetrieveUserInfo() {
 
         PatwFB.userInfo(function(response){
-            
+
             PatwFB.log(response);
             alert("Hello " + PatwFB.me.name);
 
@@ -239,13 +240,13 @@
 
         // need read_stream
 
-        var params;
-        var comments_point;
-        var tmp_id;
-        var tmp_name;
-        var tmp_ary = [];
-        var fuids_data = [];
-        var results = "";
+        var params,
+            comments_point,
+            tmp_id,
+            tmp_name,
+            tmp_ary = [],
+            fuids_data = [],
+            results = "";
 
         PatwFB.log("\n\nCalculating.......\n\n");
 
@@ -263,7 +264,9 @@
                             counts: 1
                         };
                         tmp_ary.push(fuids_data[tmp_id]);
-                    } else fuids_data[tmp_id].counts++;
+                    } else {
+                        fuids_data[tmp_id].counts++;
+                    }
                 }
                 for (comments_point = 0; comments_point < rows[params].likes.friends.length; comments_point++) {
                     tmp_id = rows[params].likes.friends[comments_point];
@@ -274,10 +277,14 @@
                             counts: 1
                         };
                         tmp_ary.push(fuids_data[tmp_id]);
-                    } else fuids_data[tmp_id].counts++;
+                    } else {
+                        fuids_data[tmp_id].counts++;
+                    }
                 }
             }
-            for (params in fuids_data) results += "[" + params + "] counts: " + fuids_data[params].counts + "\n";
+            for (params in fuids_data) {
+                results += "[" + params + "] counts: " + fuids_data[params].counts + "\n";
+            }
             var tmp_obj;
             for (var i = 0; i < tmp_ary.length - 1; i++) {
                 for (var j = i + 1; j < tmp_ary.length; j++) {
@@ -308,13 +315,11 @@
     // List all my albums
     function getAlbums() {
 
-        var available_albums_counter = -1;
-        var album = [];
-        var album_name = "";
+        var available_albums_counter = -1,
+            album = [],
+            album_name = "";
 
-        $("#photolist").css({ "border": "1px solid #000" });
-        $("#photolist").empty();
-        $("#photolist").hide();
+        $("#photolist").css({ "border": "1px solid #000" }).empty().hide();
         $("#loader").empty().html("<img src='images/ajax-loader.gif' />").show();
 
         PatwFB.API("/me/albums?fields=id,name,cover_photo,count&limit=1000", "GET", "", function (response) {
@@ -337,16 +342,13 @@
 
                 if (photos) {
 
-                    $("#photolist")
-                                    .append($("<div/>", { "class": "contact", "onclick": "javascript:getPhotosFromAlbum('" + cover + "')" })
-                                            .append($("<img/>", { "src": photos.picture })
-                                    ).append($("<p/>").text(album_name)));
+                    $("#photolist").append($("<div/>", { "class": "contact", "onclick": "javascript:getPhotosFromAlbum('" + cover + "')" }).append($("<img/>", { "src": photos.picture })).append($("<p/>").text(album_name)));
 
-                    console.log($("#photolist div").length);
-                    console.log(available_albums_counter);
+                    PatwFB.log($("#photolist div").length);
+                    PatwFB.log(available_albums_counter);
 
                     // If all cover photos has been inserted, show container.
-                    if ($("#photolist div p").length == available_albums_counter) {
+                    if ($("#photolist div p").length === available_albums_counter) {
                         $("#loader").empty().hide();
                         $("#photolist").show();
                     }
@@ -368,7 +370,7 @@
             }
         }, function (response) {
 
-            console.log(response);
+            PatwFB.log(response);
 
             var parsed = [];
             $(response[1].fql_result_set).each(function (index, value) {
@@ -409,8 +411,8 @@
         <hr />
 
         <h2>Download</h2>
-        <p>Current version: 1.0 ( Released under the <a href="http://opensource.org/licenses/mit-license.php" target="_blank">MIT License</a> | <a href="https://code.google.com/p/patw-facebook-js-library/" target"_blank">Google Project</a> )<br />
-        Tested in: jQuery 1.7.2 in Chrome.</p>
+        <p>Current version: 1.2 ( Released under the <a href="http://opensource.org/licenses/mit-license.php" target="_blank">MIT License</a> | <a href="https://github.com/patw0929/patw-facebook-js-library" target"_blank">GitHub</a> )<br />
+        Tested in: jQuery 1.8.3 in Chrome.</p>
 
         <hr />
 
