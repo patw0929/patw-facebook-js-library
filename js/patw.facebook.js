@@ -54,7 +54,7 @@ var PatwFB = window.PatwFB || {};
             PatwFB.channelUrl = window.location.protocol + "//" + window.location.hostname + "/channel.html";
 
             window.fbAsyncInit = function () {
-                if ($("fb-root").length === 0) {
+                if ($("#fb-root").length === 0) {
                     $('body').append('<div id="fb-root"></div>');
                 }
 
