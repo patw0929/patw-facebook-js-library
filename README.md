@@ -15,6 +15,7 @@ Usage
 ---
 You need to include jquery.min.js (at least 1.7.2 version) first, and then add these code:
 
+```javascript
 $(function() {
 	// AppID
 	PatwFB.appId = '360261570721073';
@@ -23,7 +24,7 @@ $(function() {
 	// scope. reference: https://developers.facebook.com/docs/reference/api/permissions/
 	PatwFB.scope = "publish_stream,user_likes,email,user_photos,read_stream";
 });
-
+```
 
 Demo
 ---
