@@ -8,108 +8,111 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/patw.facebook.js"></script>
 <script type="text/javascript">
-    $(function() {
-    	// AppID
-        PatwFB.appId = '360261570721073';
-        // Init
-        PatwFB.init();
-        // scope. reference: https://developers.facebook.com/docs/reference/api/permissions/
-        PatwFB.scope = "publish_stream,user_likes,email,user_photos,read_stream";
-    });
+/*jslint browser: true*/
+/*jslint devel: true*/
+/*global $, jQuery, FB, PatwFB*/
 
-    function CheckIsFan(pageid)
-    {
-	    PatwFB.isFan(pageid, 
-		    function() {
-			    $("#div_fan").hide();
-			    alert("Hey! you already became this page's fan.");
-		    },
-		    function() {
-			    $("#div_fan").show();
-			    setTimeout(function () {
-                    CheckIsFan(pageid);
-                }, 1000);
-		    }
-	    );
+$(function () {
+    "use strict";
 
-    }
+    // AppID
+    PatwFB.appId = '360261570721073';
+    // Init
+    PatwFB.init();
+    // scope. reference: https://developers.facebook.com/docs/reference/api/permissions/
+    PatwFB.scope = "publish_stream,user_likes,email,user_photos,read_stream";
+});
 
-    // Publish (directly)
-    function Publish() {
-        var params = {};
-        params['message'] = 'I wanna say...';
-        params['name'] = 'Title';
-        params['description'] = 'Description description.';
-        params['link'] = 'http://patw.idv.tw/';
-        params['picture'] = 'http://patw.idv.tw/img/fb.gif';
-        params['source'] = 'http://wwwimages.adobe.com/www.adobe.com/multimedia/en_us/get/flash/flash_installed_728x170.swf';
-        params['caption'] = '{*actor*} say Hi!';
-        params['actions'] = { name: 'Google (Under link)', link: 'http://www.google.com' };
-        //params['place'] = "250246004989992"; // Checkin location
+var checkIsFan = function (pageid) {
+    "use strict";
+
+    PatwFB.isFan(pageid,
+        function () {
+            $("#div_fan").hide();
+            alert("Hey! you already became this page's fan.");
+        },
+        function () {
+            $("#div_fan").show();
+            setTimeout(function () {
+                checkIsFan(pageid);
+            }, 1000);
+        }
+        );
+
+},
+    publish = function () {
+        "use strict";
+
+        var params = {
+            'message': 'I wanna say...',
+            'name': 'Title',
+            'description': 'Description description.',
+            'link': 'http://patw.idv.tw/'
+        };
 
         PatwFB.Publish(params,
-	        function (response) {
-	            alert(response.id);
-	        },
-	        function () {
-	            alert("Publish failed.");
-	        }
-	        );
-    }
+            function (response) {
+                alert(response.id);
+            },
+            function () {
+                alert("Publish failed.");
+            }
+            );
+    },
+    postPhoto = function () {
+        "use strict";
 
-    function PostPhoto()
-    {
-	    var album_params = {};
-	    album_params["name"] = "Album name";
-	    var photos_params = {};
-	    photos_params['name'] = 'Photo title';
-	    photos_params['message'] = ''; // seems no use here.
-	    photos_params['url'] = "http://patw.idv.tw/img/fb.gif";
-	    //photos_params['place'] = "250246004989992";
-	
-	    PatwFB.UploadPhoto(album_params, photos_params, '',
-						    function (response) {
-							    alert("OK");
-						    },
-						    function () {
-							    PatwFB.log('not ok');
-						    }
-					    );
-    }
+        var album_params = {
+            'name': 'Album name'
+        },
+            photos_params = {
+                'name': 'Photo title',
+                'message': '', // seems no use here.
+                'url': 'http://patw.idv.tw/img/fb.gif'
+            };
 
+        PatwFB.UploadPhoto(album_params, photos_params, '',
+                            function () {
+                alert("OK");
+            },
+                            function () {
+                PatwFB.log('not ok');
+            }
+                        );
+    },
+    postPhotoUI = function () {
+        "use strict";
 
-    function PostPhotoUI()
-    {
         var data = {
-           method: 'feed',
-           message: 'Hello world',
-           name: 'Title',
-           caption: "patw's jQuery Facebook JS SDK Library",
-              description: (
-              'This first line.<center></center>' + // if you need to break line, please use <center></center>
-              'Hello world, <br />' + // <br /> is not working here.
-              'this is a test message.'
-           ),
-           link: 'http://patw.idv.tw/',
-           picture: 'http://patw.idv.tw/img/fb.gif',
-           actions: [
-                { name: 'Google', link: 'http://www.google.com/' }
-           ],
-           user_message_prompt: 'Yes.. This is a test.'
-        };
-	
-	    PatwFB.PublishUI(data, 
-	    function(response){
-		    alert(response.post_id);
-	    },
-	    function(){
-		    alert("Not published.");
-	    }
-	    );
-    }
+                method: 'feed',
+                message: 'Hello world',
+                name: 'Title',
+                caption: "patw's jQuery Facebook JS SDK Library",
+                description: (
+                    'This first line.<center></center>' + // if you need to break line, please use <center></center>
+                    'Hello world, <br />' + // <br /> is not working here.
+                    'this is a test message.'
+                ),
+                link: 'http://patw.idv.tw/',
+                picture: 'http://patw.idv.tw/img/fb.gif',
+                actions: [
+                    { name: 'Google', link: 'http://www.google.com/' }
+                ],
+                user_message_prompt: 'Yes.. This is a test.'
+            };
 
-    // publish with popup window
-    function PublishPopup() {
+        PatwFB.PublishUI(data,
+            function (response) {
+                alert(response.post_id);
+            },
+            function () {
+                alert("Not published.");
+            }
+            );
+    },
+    publishPopup = function () {
+
+        "use strict";
 
         var data = {
             method: 'stream.publish',
@@ -117,80 +120,85 @@
             message: 'Hello world',
             name: 'Title',
             caption: "patw's jQuery Facebook JS SDK Library",
-            description: (
-              'This first line.<center></center>' + // if you need to break line, please use <center></center>
-              'Hello world, <br />' + // <br /> is not working here.
-              'this is a test message.'
-           ),
+            description: 'This first line.<center></center>' + // if you need to break line, please use <center></center>
+                'Hello world, <br />' + // <br /> is not working here.
+                'this is a test message.',
             link: 'http://patw.idv.tw/',
             picture: 'http://patw.idv.tw/img/fb.gif',
             actions: [
                 { name: 'Google', link: 'http://www.google.com/' }
-           ],
+            ],
             user_message_prompt: 'Yes.. This is a test.'
         };
 
         PatwFB.PublishUI(data,
-	    function (response) {
-	        alert(response.post_id);
-	    },
-	    function () {
-	        alert("Not published.");
-	    }
-	    );
+            function (response) {
+                alert(response.post_id);
+            },
+            function () {
+                alert("Not published.");
+            });
 
-    }
+    },
+    checkURLShareCount = function () {
 
-    function CheckURLShareCount(url) {
+        "use strict";
 
         PatwFB.RetrieveURLShareCount("http://patw.idv.tw/",
             function (count) {
                 alert(count);
             });
 
-    }
+    },
+    retrievePhotoLikeData = function () { // Caculate which photo I upload is the most liked photo.
 
-    // Caculate which photo I upload is the most liked photo.
-    function RetrievePhotoLikeData() {
-        var photo = [];
-        var tmp_ary = [];
+        "use strict";
+
+        PatwFB.log("\n\nCalculating.......\n\n");
+
+        var photo = [],
+            tmp_ary = [];
+
         PatwFB.FQL("SELECT object_id, user_id FROM like WHERE object_id IN (SELECT object_id FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner=me()) LIMIT 5000) LIMIT 100000",
-	        function (data) {
-	            $.each(data, function (i, info) {
-	                if (photo[info.object_id] == undefined) {
-	                    photo[info.object_id] = {
-	                        object_id: info.object_id,
-	                        counts: 1
-	                    };
-	                    tmp_ary.push(photo[info.object_id]);
-	                }
-	                else {
-	                    photo[info.object_id].counts++;
-	                }
-	            });
-	            var tmp_obj;
-	            for (var i = 0; i < tmp_ary.length - 1; i++) {
-	                for (var j = i + 1; j < tmp_ary.length; j++) {
-	                    if (tmp_ary[i].counts > tmp_ary[j].counts) {
-	                        tmp_obj = tmp_ary[i];
-	                        tmp_ary[i] = tmp_ary[j];
-	                        tmp_ary[j] = tmp_obj;
-	                    }
-	                }
-	            }
+            function (data) {
+                $.each(data, function (i, info) {
+                    if (photo[info.object_id] === undefined) {
+                        photo[info.object_id] = {
+                            object_id: info.object_id,
+                            counts: 1
+                        };
+                        tmp_ary.push(photo[info.object_id]);
+                    } else {
+                        photo[info.object_id].counts++;
+                    }
+                });
+                var tmp_obj,
+                    i = 0,
+                    j = 0,
+                    max;
 
-	            tmp_ary = tmp_ary.reverse();
-	            if (tmp_ary.length > 0) {
-	                PatwFB.FQL("SELECT pid, src_big FROM photo WHERE object_id='" + tmp_ary[0].object_id + "'",
-			        function (data) {
-			            PatwFB.log("PID: " + data[0].pid + "\n" + data[0].src_big + "\nLike: " + tmp_ary[0].counts);
-			        });
-	            }
-	    });
-    }
+                for (i = 0, max = tmp_ary.length - 1; i < max; i++) {
+                    for (j = i + 1; j < tmp_ary.length; j++) {
+                        if (tmp_ary[i].counts > tmp_ary[j].counts) {
+                            tmp_obj = tmp_ary[i];
+                            tmp_ary[i] = tmp_ary[j];
+                            tmp_ary[j] = tmp_obj;
+                        }
+                    }
+                }
 
-    // Send invitation to friends
-    function invite() {
+                tmp_ary = tmp_ary.reverse();
+                if (tmp_ary.length > 0) {
+                    PatwFB.FQL("SELECT pid, src_big FROM photo WHERE object_id='" + tmp_ary[0].object_id + "'",
+                        function (data) {
+                            PatwFB.log("PID: " + data[0].pid + "\n" + data[0].src_big + "\nLike: " + tmp_ary[0].counts);
+                        });
+                }
+            });
+    },
+    invite = function () { // Send invitation to friends
+        "use strict";
+
         PatwFB.InviteFriend({
             message: "Hello... please accept my invitation.",
             title: "patw's jQuery Facebook JS SDK Library",
@@ -199,19 +207,19 @@
         }, function (response) {
             PatwFB.log(response);
         });
-    }
+    },
+    uploadPhoto = function () { // Upload photo
+        "use strict";
 
-    // Upload photo
-    function UploadPhoto() {
-        var album_params = [];
-        album_params["name"] = "Album's Name";
-
-        var photo_params = [];
-        photo_params['name'] = 'This photo is upload by @[' + PatwFB.uid + ':You]';
-        photo_params['message'] = '';
-        photo_params['url'] = "http://patw.idv.tw/img/fb.gif";
-
-        var tags_params = [];
+        var album_params = {
+            'name': 'Hello world'
+        },
+            photo_params = {
+                'name': 'This is a test.',
+                'message': '',
+                'url': 'http://patw.idv.tw/img/fb.gif'
+            },
+            tags_params = {};
 
         PatwFB.UploadPhoto(album_params, photo_params, tags_params,
             function (response) {
@@ -220,33 +228,53 @@
             function (response) {
                 alert("Upload failed");
             }
-        );
-    }
+            );
+    },
+    retrieveUserInfo = function () { // Retrieve user's information.
+        "use strict";
 
-    // Retrieve user's information.
-    function RetrieveUserInfo() {
-
-        PatwFB.userInfo(function(response){
+        PatwFB.userInfo(function (response) {
 
             PatwFB.log(response);
             alert("Hello " + PatwFB.me.name);
 
         });
 
-    }
+    },
+    mostInteractiveFriend = function () { // Caculate who is your most interactive facebook friend
 
-    // Caculate who is your most interactive facebook friend
-    function MostInteractiveFriend() {
+        'use strict';
 
         // need read_stream
 
-        var params,
-            comments_point,
+        var comments_point,
+            max = 0,
             tmp_id,
-            tmp_name,
             tmp_ary = [],
             fuids_data = [],
-            results = "";
+            results = "",
+            quickSort = function(arr) {
+            　　if (arr.length <= 1) {
+                    return arr;
+                }
+
+            　　var pivotIndex = Math.floor(arr.length / 2),
+               　　 pivot = arr[pivotIndex],
+                    left = [],
+            　　    right = [];
+
+                arr.splice(pivotIndex, 1);
+
+            　　for (var i = 0; i < arr.length; i++){
+            　　　　if (arr[i].counts < pivot.counts) {
+            　　　　　　left.push(arr[i]);
+            　　　　} else {
+            　　　　　　right.push(arr[i]);
+            　　　　}
+            　　}
+
+            　　return quickSort(left).concat([pivot], quickSort(right));
+            };
 
         PatwFB.log("\n\nCalculating.......\n\n");
 
@@ -254,11 +282,28 @@
 
             PatwFB.log(rows);
 
-            for (params in rows) {
-                for (comments_point = 0; comments_point < rows[params].comments.comment_list.length; comments_point++) {
-                    tmp_id = rows[params].comments.comment_list[comments_point].fromid;
-                    if (PatwFB.uid == tmp_id) continue;
-                    if (fuids_data[tmp_id] == undefined) {
+            var rowN,
+                rowMax,
+                tmp_obj,
+                tmp_ary1N,
+                tmp_ary1Max,
+                tmp_ary2N,
+                tmp_ary2Max,
+                tmp_ary3N,
+                tmp_ary3Max;
+
+            for (rowN = 0, rowMax = rows.length; rowN < rowMax; rowN++) {
+
+                // Caculate comments
+                for (comments_point = 0, max = rows[rowN].comments.comment_list.length; comments_point < max; comments_point++) {
+                    tmp_id = rows[rowN].comments.comment_list[comments_point].fromid;
+
+                    // if me, skip
+                    if (PatwFB.uid === tmp_id) {
+                        continue;
+                    }
+
+                    if (fuids_data[tmp_id] === undefined) {
                         fuids_data[tmp_id] = {
                             uid: tmp_id,
                             counts: 1
@@ -268,10 +313,16 @@
                         fuids_data[tmp_id].counts++;
                     }
                 }
-                for (comments_point = 0; comments_point < rows[params].likes.friends.length; comments_point++) {
-                    tmp_id = rows[params].likes.friends[comments_point];
-                    if (PatwFB.uid == tmp_id) continue;
-                    if (fuids_data[tmp_id] == undefined) {
+
+                // Caculate likes
+                for (comments_point = 0, max = rows[rowN].likes.friends.length; comments_point < max; comments_point++) {
+                    tmp_id = rows[rowN].likes.friends[comments_point];
+
+                    // if me, skip
+                    if (PatwFB.uid === tmp_id) {
+                        continue;
+                    }
+                    if (fuids_data[tmp_id] === undefined) {
                         fuids_data[tmp_id] = {
                             uid: tmp_id,
                             counts: 1
@@ -282,83 +333,74 @@
                     }
                 }
             }
-            for (params in fuids_data) {
-                results += "[" + params + "] counts: " + fuids_data[params].counts + "\n";
-            }
-            var tmp_obj;
-            for (var i = 0; i < tmp_ary.length - 1; i++) {
-                for (var j = i + 1; j < tmp_ary.length; j++) {
-                    if (tmp_ary[i].counts > tmp_ary[j].counts) {
-                        tmp_obj = tmp_ary[i];
-                        tmp_ary[i] = tmp_ary[j];
-                        tmp_ary[j] = tmp_obj;
-                    }
-                }
-            }
+
+            // quick sort
+            tmp_ary = quickSort(tmp_ary);
+
             results += "\n\nAfter Sort:\n";
             tmp_ary = tmp_ary.reverse();
-            for (i = 0; i < tmp_ary.length; i++) {
-                results += "[" + tmp_ary[i].uid + "] : " + tmp_ary[i].counts + "\n";
+
+            for (tmp_ary3N = 0, tmp_ary3Max = tmp_ary.length; tmp_ary3N < tmp_ary3Max; tmp_ary3N++) {
+                results += "[" + tmp_ary[tmp_ary3N].uid + "] : " + tmp_ary[tmp_ary3N].counts + "\n";
             }
 
             PatwFB.log(results);
         });
-    }
-
-    function AskforNewPermission() {
+    },
+    askforNewPermission = function () {
+        "use strict";
 
         PatwFB.scope = "user_birthday";
         PatwFB.Login();
 
-    }
-
-    // List all my albums
-    function getAlbums() {
+    },
+    getAlbums = function () { // List all my albums
+        "use strict";
 
         var available_albums_counter = -1,
             album = [],
-            album_name = "";
+            album_name = "",
+            i = 0,
+            max = 0,
+            getCoverPhoto = function (cover, album_name) {
+
+                PatwFB.API('/' + cover, "GET", "", function (photos) {
+
+                    if (photos) {
+
+                        $("#photolist").append($("<div/>", { "class": "contact", "onclick": "getPhotosFromAlbum('" + cover + "')" }).append($("<img/>", { "src": photos.picture })).append($("<p/>").text(album_name)));
+
+                        PatwFB.log($("#photolist div").length);
+                        PatwFB.log(available_albums_counter);
+
+                        // If all cover photos has been inserted, show container.
+                        if ($("#photolist div p").length === available_albums_counter) {
+                            $("#loader").empty().hide();
+                            $("#photolist").show();
+                        }
+                    }
+                });
+            };
 
         $("#photolist").css({ "border": "1px solid #000" }).empty().hide();
         $("#loader").empty().html("<img src='images/ajax-loader.gif' />").show();
 
         PatwFB.API("/me/albums?fields=id,name,cover_photo,count&limit=1000", "GET", "", function (response) {
 
-            for (var i = 0; i < response.data.length; i++) {
+            for (i = 0, max = response.data.length; i < max; i++) {
                 album = response.data[i];
                 album_name = response.data[i].name;
 
                 if (album.cover_photo) {
-                    _getCoverPhoto(album.cover_photo, album_name);
+                    getCoverPhoto(album.cover_photo, album_name);
                     available_albums_counter++;
                 }
 
             }
         });
-
-        function _getCoverPhoto(cover, album_name) {
-
-            PatwFB.API('/' + cover, "GET", "", function (photos) {
-
-                if (photos) {
-
-                    $("#photolist").append($("<div/>", { "class": "contact", "onclick": "javascript:getPhotosFromAlbum('" + cover + "')" }).append($("<img/>", { "src": photos.picture })).append($("<p/>").text(album_name)));
-
-                    PatwFB.log($("#photolist div").length);
-                    PatwFB.log(available_albums_counter);
-
-                    // If all cover photos has been inserted, show container.
-                    if ($("#photolist div p").length === available_albums_counter) {
-                        $("#loader").empty().hide();
-                        $("#photolist").show();
-                    }
-                }
-            });
-        }
-    }
-
-    // List all my photos from specific album
-    function getPhotosFromAlbum(cover) {
+    },
+    getPhotosFromAlbum = function (cover) { // List all my photos from specific album
+        "use strict";
 
         $("#photolist").empty();
 
@@ -372,7 +414,18 @@
 
             PatwFB.log(response);
 
-            var parsed = [];
+            var parsed = [],
+                showPhotosFromAlbum = function (data) {
+                    $(data).each(function (index, value) {
+
+                        $("#photolist")
+                                .append($("<div/>", { "class": "contact", "onclick": "alert('" + value.src + "')" })
+                                .append($("<img/>", { "src": value.src })
+                                        ).append($("<p/>").text(value.title)));
+
+                    });
+                };
+
             $(response[1].fql_result_set).each(function (index, value) {
                 var result = {
                     src: value.src,
@@ -380,24 +433,11 @@
                 };
                 parsed.push(result);
             });
-            _showPhotosFromAlbum(parsed);
-
-            function _showPhotosFromAlbum(data) {
-
-                $(data).each(function (index, value) {
-
-                    $("#photolist")
-                        .append($("<div/>", { "class": "contact", "onclick":"javascript:alert('" + value.src + "')" })
-                        .append($("<img/>", { "src": value.src })
-                    ).append($("<p/>").text(value.title)));
-
-                });
-            }
+            showPhotosFromAlbum(parsed);
 
         });
 
-    }
-
+    };
 </script>
 </head>
 
@@ -421,13 +461,13 @@
         <p>You need to include jquery.min.js (at least 1.7.2 version) first, and then add these code:</p>
 <!-- HTML generated using hilite.me -->
 <div style="background: #f8f8f8; overflow:auto;width:auto;color:black;background:white;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-<pre style="margin: 0; line-height: 125%">$(<span style="color: #008000">document</span>).ready(<span style="color: #008000; font-weight: bold">function</span>() {
-	<span style="color: #408080; font-style: italic">// AppID</span>
-	PatwFB.appId <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;360261570721073&#39;</span>;
-	<span style="color: #408080; font-style: italic">// Init</span>
-	PatwFB.init();
-	<span style="color: #408080; font-style: italic">// scope. reference: https://developers.facebook.com/docs/reference/api/permissions/</span>
-	PatwFB.scope <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;publish_stream,user_likes,email,user_photos,read_stream&quot;</span>;
+<pre style="margin: 0; line-height: 125%">$(<span style="color: #008000; font-weight: bold">function</span> () {
+    <span style="color: #408080; font-style: italic">// AppID</span>
+    PatwFB.appId <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;360261570721073&#39;</span>;
+    <span style="color: #408080; font-style: italic">// Init</span>
+    PatwFB.init();
+    <span style="color: #408080; font-style: italic">// scope. reference: https://developers.facebook.com/docs/reference/api/permissions/</span>
+    PatwFB.scope <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;publish_stream,user_likes,email,user_photos,read_stream&quot;</span>;
 });
 </pre></div>
 
@@ -441,20 +481,20 @@
             <ul id="demo_btns">
                 <li><button class="btn" type="button" onclick="javascript:PatwFB.Login();">Login</button></li>
                 <li><button class="btn" type="button" onclick="javascript:PatwFB.Logout();">Logout</button></li>
-                <li><button class="btn" type="button" onclick="javascript:CheckIsFan('390577014272');">Check is fan or not</button></li>
-                <li><button class="btn" type="button" onclick="javascript:Publish();">Publish message to my wall (directly)</button></li>
-                <li><button class="btn" type="button" onclick="javascript:PublishPopup();">Publish message to my wall (with popup window)</button></li>
+                <li><button class="btn" type="button" onclick="javascript:checkIsFan('390577014272');">Check is fan or not</button></li>
+                <li><button class="btn" type="button" onclick="javascript:publish();">Publish message to my wall (directly)</button></li>
+                <li><button class="btn" type="button" onclick="javascript:publishPopup();">Publish message to my wall (with popup window)</button></li>
 
-                <li><button class="btn" type="button" onclick="javascript:PostPhoto();">Publish Photo to my wall (directly)</button></li>
-                <li><button class="btn" type="button" onclick="javascript:PostPhotoUI();">Publish Photo to my wall (with dialog UI)</button></li>
-                <li><button class="btn" type="button" onclick="javascript:CheckURLShareCount('http://patw.idv.tw/');">Check how many times the URL: http://patw.idv.tw has been shared.</button></li>
-                <li><button class="btn" type="button" onclick="javascript:RetrievePhotoLikeData();">Caculate which photo in my albums is the most liked photo. (See console.log)</button></li>
+                <li><button class="btn" type="button" onclick="javascript:postPhoto();">Publish Photo to my wall (directly)</button></li>
+                <li><button class="btn" type="button" onclick="javascript:postPhotoUI();">Publish Photo to my wall (with dialog UI)</button></li>
+                <li><button class="btn" type="button" onclick="javascript:checkURLShareCount('http://patw.idv.tw/');">Check how many times the URL: http://patw.idv.tw has been shared.</button></li>
+                <li><button class="btn" type="button" onclick="javascript:retrievePhotoLikeData();">Caculate which photo in my albums is the most liked photo. (See console.log)</button></li>
                 <li><button class="btn" type="button" onclick="javascript:invite();">Send application invitation to friends.</button></li>
 
-                <li><button class="btn" type="button" onclick="javascript:UploadPhoto();">Upload photo</button></li>
-                <li><button class="btn" type="button" onclick="javascript:RetrieveUserInfo();">Retrieve User's Information. (See console.log)</button></li>
-                <li><button class="btn" type="button" onclick="javascript:PatwFB.Login(MostInteractiveFriend);">Caculate who is your most interactive facebook friend. (See console.log)</button></li>
-                <li><button class="btn" type="button" onclick="javascript:AskforNewPermission();">Ask for another permission.</button></li>
+                <li><button class="btn" type="button" onclick="javascript:uploadPhoto();">Upload photo</button></li>
+                <li><button class="btn" type="button" onclick="javascript:retrieveUserInfo();">Retrieve User's Information. (See console.log)</button></li>
+                <li><button class="btn" type="button" onclick="javascript:PatwFB.Login(mostInteractiveFriend);">Caculate who is your most interactive facebook friend. (See console.log)</button></li>
+                <li><button class="btn" type="button" onclick="javascript:askforNewPermission();">Ask for another permission.</button></li>
                 <li><button class="btn" type="button" onclick="javascript:PatwFB.Login(getAlbums);">List all my albums.</button></li>
             </ul>
 
@@ -476,11 +516,11 @@
 
 <div style="width:100%; height:100%;background:rgba(0,0,0,0.6);display:none;z-index:999;position:absolute;top:0px;left:0px;" id="div_fan">
     <div style="width: 351px; height: 285px; margin-left: 100px; background: #fff; margin-top: 100px; border: #333 2px solid; padding-top:5px;">
-	    <div style="width: 349px; margin-left: 0px; font-size: 14px; font-weight: bold; color: #333;">
-			    Please give the page a like:
-	    <div id="like_box" style="margin-top: 5px;"><iframe src="//www.facebook.com/plugins/likebox.php?href=http://www.facebook.com/390577014272&amp;width=349&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=false&amp;height=259" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 360px; height: 259px;" allowTransparency="true"></iframe></div>
-		</div>
-	</div>
+        <div style="width: 349px; margin-left: 0px; font-size: 14px; font-weight: bold; color: #333;">
+                Please give the page a like:
+        <div id="like_box" style="margin-top: 5px;"><iframe src="//www.facebook.com/plugins/likebox.php?href=http://www.facebook.com/390577014272&amp;width=349&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=false&amp;height=259" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 360px; height: 259px;" allowTransparency="true"></iframe></div>
+        </div>
+    </div>
 </div>
 
 </body>
