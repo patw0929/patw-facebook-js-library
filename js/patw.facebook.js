@@ -526,6 +526,7 @@ var PatwFB = window.PatwFB || {};
                     }
 
                     if (albums_params !== undefined) {
+
                         // Check the album is exist or not
                         FB.api('/me/albums', function (response) {
                             var AlbumsID = "";
@@ -548,7 +549,7 @@ var PatwFB = window.PatwFB || {};
                                             function Success(response) {
 
                                                 // If has tag params
-                                                if (tags_params.length !== 0) {
+                                                if (!PatwFB.isEmpty(tags_params)) {
 
                                                     PatwFB.API('/' + response.id + '/tags', 'POST', tags_params,
 

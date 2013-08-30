@@ -21,6 +21,8 @@ $(function () {
     PatwFB.init();
     // scope. reference: https://developers.facebook.com/docs/reference/api/permissions/
     PatwFB.scope = "publish_stream,user_likes,email,user_photos,read_stream";
+
+    PatwFB.redirect_uri = "http://labs.patw.idv.tw/facebookjs/";
 });
 
 var checkIsFan = function (pageid) {
