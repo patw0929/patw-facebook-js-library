@@ -5,12 +5,12 @@
 <title>patw's jQuery Facebook JS SDK Library</title>
 <link href="css/bootstrap.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/patw.facebook.js"></script>
 <script type="text/javascript">
 /*jslint browser: true*/
 /*jslint devel: true*/
-/*global $, jQuery, FB, PatwFB*/
+/*global $, FB, PatwFB*/
 
 $(function () {
     "use strict";
@@ -18,11 +18,11 @@ $(function () {
     // AppID
     PatwFB.appId = '360261570721073';
     // Init
-    PatwFB.init();
+    PatwFB.init(function () {
+        PatwFB.setSize();
+    });
     // scope. reference: https://developers.facebook.com/docs/reference/api/permissions/
     PatwFB.scope = "publish_stream,user_likes,email,user_photos,read_stream";
-
-    PatwFB.redirect_uri = "http://labs.patw.idv.tw/facebookjs/";
 });
 
 var checkIsFan = function (pageid) {
@@ -453,7 +453,7 @@ var checkIsFan = function (pageid) {
         <hr />
 
         <h2>Download</h2>
-        <p>Current version: 1.2 ( Released under the <a href="http://opensource.org/licenses/mit-license.php" target="_blank">MIT License</a> | <a href="https://github.com/patw0929/patw-facebook-js-library" target"_blank">GitHub</a> )<br />
+        <p>Current version: 1.3 ( Released under the <a href="http://opensource.org/licenses/mit-license.php" target="_blank">MIT License</a> | <a href="https://github.com/patw0929/patw-facebook-js-library" target"_blank">GitHub</a> )<br />
         Tested in: jQuery 1.8.3 in Chrome.</p>
 
         <hr />
@@ -516,14 +516,13 @@ var checkIsFan = function (pageid) {
     </div>
 </div>
 
-<div style="width:100%; height:100%;background:rgba(0,0,0,0.6);display:none;z-index:999;position:absolute;top:0px;left:0px;" id="div_fan">
-    <div style="width: 351px; height: 285px; margin-left: 100px; background: #fff; margin-top: 100px; border: #333 2px solid; padding-top:5px;">
-        <div style="width: 349px; margin-left: 0px; font-size: 14px; font-weight: bold; color: #333;">
-                Please give the page a like:
-        <div id="like_box" style="margin-top: 5px;"><iframe src="//www.facebook.com/plugins/likebox.php?href=http://www.facebook.com/390577014272&amp;width=349&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=false&amp;height=259" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 360px; height: 259px;" allowTransparency="true"></iframe></div>
+<div id="div_fan">
+    <div class="wrapper">
+        <div>
+            Please give the page a like:
+            <div id="like_box" style="margin-top: 5px;"><iframe src="//www.facebook.com/plugins/likebox.php?href=http://www.facebook.com/390577014272&amp;width=349&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=false&amp;height=259" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 360px; height: 259px;" allowTransparency="true"></iframe></div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
