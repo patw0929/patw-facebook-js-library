@@ -1,5 +1,10 @@
-hr
-{
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+hr {
     clear:both;
 }
 
@@ -10,39 +15,34 @@ hr
     font-weight: 400;
 }
 
-#demo 
-{
+#demo {
     clear:both;
     float:left;
     margin: 10px auto 20px auto;
 }
 
-#demo_btns 
-{
+#demo_btns {
     clear: both;
     margin: 0;
     padding: 0;
     width: 100%;
 }
 
-#demo_btns li
-{
+#demo_btns li {
     float: left;
     padding: 0;
     margin: 5px 10px 5px 0;
     list-style: none;
 }
 
-#loader 
-{
-    float:left;
-    clear:both;
+#loader {
+    float: left;
+    clear: both;
 }
 
-#photolist
-{
-    clear:both;
-    width:100%;
+#photolist {
+    clear: both;
+    width: 100%;
 }
 
 #photolist .contact {
@@ -54,15 +54,49 @@ hr
 	cursor: pointer;
 }
 
-#photolist .contact img 
-{
+#photolist .contact img {
     padding: 4px;
 	border-style: solid;
 	border-color: #D9D9D9;
 	border-width: 1px;
 }
 
-#photolist .contact p
-{
+#photolist .contact p {
     font-size:9pt;
+}
+
+#div_fan {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+}
+
+#div_fan:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle ;
+    height: 100%;
+}
+
+#div_fan .wrapper {
+    display: inline-block;
+    width: 400px;
+    height: 300px;
+    background: #fff;
+    vertical-align: middle;
+}
+
+#div_fan .wrapper > div {
+    width: 360px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    margin: 5px auto;
 }

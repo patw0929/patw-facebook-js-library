@@ -1,5 +1,5 @@
 /*
-* patw's jQuery Facebook JS SDK Library 1.2
+* patw's jQuery Facebook JS SDK Library 1.3
 * https://code.google.com/p/patw-facebook-js-library/
 *
 * Copyright (C) 2013 Patrick Wang <patw.hi@gmail.com>
@@ -26,7 +26,7 @@
 
 /*jslint browser: true*/
 /*jslint devel: true*/
-/*global $, jQuery, FB*/
+/*global $, FB*/
 
 var PatwFB = window.PatwFB || {};
 (function () {
@@ -43,13 +43,12 @@ var PatwFB = window.PatwFB || {};
         cookie: true,
         oauth: true,
         channelUrl: "",
-        redirect_uri: "",
         scope: "",
         perm_cache: [],
         // =====================================================================
         // init
         // =====================================================================
-        init: function () {
+        init: function (callback) {
 
             PatwFB.channelUrl = window.location.protocol + "//" + window.location.hostname + "/channel.html";
 
@@ -80,6 +79,10 @@ var PatwFB = window.PatwFB || {};
 
                 FB.getLoginStatus(PatwFB.updateStatus);
                 FB.Event.subscribe('auth.statusChange', PatwFB.updateStatus);
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
             };
         },
         updateStatus: function (response) {
@@ -224,10 +227,6 @@ var PatwFB = window.PatwFB || {};
                             }
                         }
                     });
-
-                } else {
-
-                    window.open('https://www.facebook.com/dialog/oauth?client_id=' + PatwFB.appId + '&redirect_uri=' + PatwFB.redirect_uri + '&scope=' + PatwFB.scope, '_top');
 
                 }
             });
