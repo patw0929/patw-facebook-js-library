@@ -6,7 +6,7 @@ Facebook JavaScript SDK Library plugin for jQuery
 
 Download
 ---
-Current version: 1.2 ( Released under the MIT License | GitHub )
+Current version: 1.3 ( Released under the MIT License | GitHub )
 
 Tested in: jQuery 1.8.3 in Chrome.
 
